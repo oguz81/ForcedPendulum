@@ -47,27 +47,30 @@ int main( void )
     unsigned int shaderProgram = myshader.programID();
     float vertices[3180];
     int corner_one, corner_two, corner_three;
-    corner_one = 0;
-    corner_two = 2;
-    corner_three = 4;
+    corner_one = -6;
+    corner_two = -4;
+    corner_three = -2;
 
     float radius = 0.5f;
 
     for(int angle = 1; angle <= 360; angle ++){
+        corner_one = corner_one + 6;
+        corner_two = corner_two + 6;
+        corner_three = corner_three + 6;
+
         vertices[corner_one] = 0.0f;
         vertices[corner_one + 1] = 0.0f;
 
-        vertices[corner_two] = cos((angle -1) * 3.1416 / 180);
-        vertices[corner_two + 1] = sin((angle -1) * 3.1416 / 180);
+        vertices[corner_two] = radius * cos((angle -1) * 3.1416 / 180);
+        vertices[corner_two + 1] = radius * sin((angle -1) * 3.1416 / 180);
 
-        vertices[corner_three] = cos((angle) * 3.1416 / 180);
-        vertices[corner_three + 1] = sin((angle) * 3.1416 / 180);
+        vertices[corner_three] = radius * cos((angle) * 3.1416 / 180);
+        vertices[corner_three + 1] = radius * sin((angle) * 3.1416 / 180);
 
-        corner_one = corner_one + 6;
-        corner_two = corner_two + 6;
-        corner_one = corner_one + 6;
+        
 
     }
+    std::cout<<corner_three<<std::endl;
 
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -88,6 +91,7 @@ int main( void )
 
     
     do{
+        float timem = glfwGetTime();
 
        // glClearColor(1.0f, 0.3f, 0.2f, 1.0f);
         glClear( GL_COLOR_BUFFER_BIT );
@@ -95,7 +99,7 @@ int main( void )
 
         
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 21);
+        glDrawArrays(GL_TRIANGLES, 0, 1100);
         
         glfwSwapBuffers(window);
         glfwPollEvents();
