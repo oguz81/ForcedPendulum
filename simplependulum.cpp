@@ -45,26 +45,19 @@ int main( void )
     Shader myshader("trianglevertexshader.vs" , "trianglefragmentshader.fs");
     
     unsigned int shaderProgram = myshader.programID();
-    float vertices[724];
-    vertices[0] = 0.0f; //x coordinate of the circle's center
-    vertices[1] = 0.0f; //y coordinate of the circle's center
-    
-    float radius = 0.5f;
-    int index = 0;
-    float x, y;
+    float vertices[] = {
+    	0.0f, 0.4f,
+    	0.2f, 0.2f,
+    	0.2f, 0.7f,
 
-    for(int angle = 0; angle < 361; angle++){
-        x = radius * cos(angle * 3.14 / 180);
-        y = radius * sin(angle * 3.14 / 180);
-        index = index + 2;
-        vertices[index] = x;
-        vertices[index + 1] = y;
-        std::cout<<vertices[index]<<std::endl;
-         
+    	0.5f, 0.1f,
+    	0.8f, 0.1f,
+    	0.65f, 0.6f,
 
-    }
-    vertices[722] = 0.5f;
-    vertices[723] = 0.0f;
+    	0.4f, -0.8f,
+    	0.7f, -0.8f,
+    	0.5f, -0.3f,
+    };
 
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -92,7 +85,7 @@ int main( void )
 
         
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 724);
+        glDrawArrays(GL_TRIANGLES, 0, 18);
         
         glfwSwapBuffers(window);
         glfwPollEvents();
