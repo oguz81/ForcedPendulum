@@ -45,19 +45,29 @@ int main( void )
     Shader myshader("trianglevertexshader.vs" , "trianglefragmentshader.fs");
     
     unsigned int shaderProgram = myshader.programID();
-    float vertices[] = {
-    	0.0f, 0.4f,
-    	0.2f, 0.2f,
-    	0.2f, 0.7f,
+    float vertices[3180];
+    int corner_one, corner_two, corner_three;
+    corner_one = 0;
+    corner_two = 2;
+    corner_three = 4;
 
-    	0.5f, 0.1f,
-    	0.8f, 0.1f,
-    	0.65f, 0.6f,
+    float radius = 0.5f;
 
-    	0.4f, -0.8f,
-    	0.7f, -0.8f,
-    	0.5f, -0.3f,
-    };
+    for(int angle = 1; angle <= 360; angle ++){
+        vertices[corner_one] = 0.0f;
+        vertices[corner_one + 1] = 0.0f;
+
+        vertices[corner_two] = cos((angle -1) * 3.1416 / 180);
+        vertices[corner_two + 1] = sin((angle -1) * 3.1416 / 180);
+
+        vertices[corner_three] = cos((angle) * 3.1416 / 180);
+        vertices[corner_three + 1] = sin((angle) * 3.1416 / 180);
+
+        corner_one = corner_one + 6;
+        corner_two = corner_two + 6;
+        corner_one = corner_one + 6;
+
+    }
 
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -85,7 +95,7 @@ int main( void )
 
         
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 18);
+        glDrawArrays(GL_TRIANGLES, 0, 21);
         
         glfwSwapBuffers(window);
         glfwPollEvents();
