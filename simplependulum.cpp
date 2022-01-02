@@ -4,6 +4,9 @@
 #include <cmath>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 GLFWwindow* window;
 
 //denemeler
@@ -22,7 +25,7 @@ int main( void )
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow( 800, 600, "PENDULUM", NULL, NULL);
+    window = glfwCreateWindow( 630, 600, "PENDULUM", NULL, NULL);
     if( window == NULL ){
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
         getchar();
@@ -42,16 +45,24 @@ int main( void )
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 
-    Shader myshader("trianglevertexshader.vs" , "trianglefragmentshader.fs");
+    Shader myshader("pendulum.vs" , "pendulum.fs");
     
     unsigned int shaderProgram = myshader.programID();
-    float vertices[3180];
-    int corner_one, corner_two, corner_three;
+    float vertices[2160];
+    float vertices2[] = {
+        -0.01f, 0.0f,
+         0.01f, 0.0f,
+         0.01f, 0.8f,
+        -0.01f, 0.8f,
+        -0.01, 0.0f
+    };
+
+    int corner_one, corner_two, corner_three;//corners of triangles. GL_TRIANGLES starts to draw counterclockwise.
     corner_one = -6;
     corner_two = -4;
     corner_three = -2;
 
-    float radius = 0.5f;
+    float radius = 0.1f;
 
     for(int angle = 1; angle <= 360; angle ++){
         corner_one = corner_one + 6;
@@ -67,39 +78,50 @@ int main( void )
         vertices[corner_three] = radius * cos((angle) * 3.1416 / 180);
         vertices[corner_three + 1] = radius * sin((angle) * 3.1416 / 180);
 
-        
-
     }
-    std::cout<<corner_three<<std::endl;
+    
 
-    unsigned int VBO, VAO;
+    unsigned int VBO, VBO2, VAO, VAO2;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    //unsigned int EBO;
-    //glGenBuffers(1, &EBO);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    
     //position attribute
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
 
+    glGenVertexArrays(1, &VAO2);
+    glGenBuffers(1, &VBO2);
+    glBindVertexArray(VAO2);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
     
+    //position attribute
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);   
     do{
-        float timem = glfwGetTime();
-
-       // glClearColor(1.0f, 0.3f, 0.2f, 1.0f);
+        float timem = glfwGetTime() * 1;
+        std::cout<<timem <<std::endl;
         glClear( GL_COLOR_BUFFER_BIT );
         glUseProgram(shaderProgram);
+        float ada= sin(timem) * 100;
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 projection = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::rotate(view, glm::radians(ada), glm::vec3(0.0f, 0.0f, 1.0f));
+        view = glm::translate(view, glm::vec3(0.0f, -0.8f, 0.0f));
 
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
         
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 1100);
+        glDrawArrays(GL_TRIANGLES, 0, 1080);
+        glBindVertexArray(VAO2);
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 5);
         
         glfwSwapBuffers(window);
         glfwPollEvents();
