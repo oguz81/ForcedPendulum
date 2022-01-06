@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 GLFWwindow* window;
-
+//deneme
 #define PI 3.141592  //Holy Pi!
 #define h 0.01       //step length for Runge-Kutta
 #define k 0.67       //driving force frequency (radian)
