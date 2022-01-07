@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 GLFWwindow* window;
-GLFWwindow* window2;
+
 //deneme
 #define PI 3.141592  //Holy Pi!
 #define h 0.01       //step length for Runge-Kutta
@@ -77,16 +77,8 @@ int main( void )
         glfwTerminate();
         return -1;
     }
-    window2 = glfwCreateWindow( 700, 600, "PENDULUM2", NULL, window);
-    if( window2 == NULL ){
-        fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
-        getchar();
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(0);
-    glfwSetInputMode(window2, GLFW_STICKY_KEYS, GL_TRUE);
-    //glfwMakeContextCurrent();
+
+    glfwMakeContextCurrent(window);
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
@@ -116,11 +108,11 @@ int main( void )
     };
     float arrows[] = {
         -0.5f, 0.0f,
-        -0.1f, 0.0f
-        //-0.5f, 0.0f,
-        //-0.3f, 0.1f,
-        //-0.5f, 0.0f,
-        //-0.3f, -0.1f
+        -0.1f, 0.0f,
+        -0.5f, 0.0f,
+        -0.3f, 0.1f,
+        -0.5f, 0.0f,
+        -0.3f, -0.1f
     };
 
     drawCircle(vertices); //draws the pendulum ball.
@@ -169,8 +161,7 @@ int main( void )
     g(time,theta,omg);
     float current_angle;
     do{
-        glfwMakeContextCurrent(window);
-        
+        driving_force = A * cos(k * time);
         current_angle = theta * 180 / PI;
         //std::cout<<current_angle<<std::endl;
         glClear( GL_COLOR_BUFFER_BIT );
@@ -206,33 +197,24 @@ int main( void )
         glDrawArrays(GL_TRIANGLES, 0, 1080);
         glBindVertexArray(VAO2);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 5);
-
-        
-        glfwSwapBuffers(window);
     
         //Create the driving force arrow. It shows magnitude and direction side of the force.
-        glfwMakeContextCurrent(window2);
-        glClear( GL_COLOR_BUFFER_BIT );
-        glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
-        driving_force = A * cos(k * time);
         glUseProgram(arrow);
         glm::mat4 modelArrow= glm::mat4(1.0f);
         glm::mat4 projectionArrow = glm::mat4(1.0f);
         glm::mat4 viewArrow = glm::mat4(1.0f);
-        //viewArrow = glm::translate(viewArrow, glm::vec3(0.0f, -0.8f, 0.0f));
-        //viewArrow = glm::scale(viewArrow, glm::vec3(-driving_force * 0.5, 1.0f, 1.0f));
+        viewArrow = glm::translate(viewArrow, glm::vec3(0.0f, -0.8f, 0.0f));
+        viewArrow = glm::scale(viewArrow, glm::vec3(-driving_force * 0.5, 1.0f, 1.0f));
         glUniformMatrix4fv(glGetUniformLocation(arrow, "projection"), 1, GL_FALSE, glm::value_ptr(projectionArrow));
         glUniformMatrix4fv(glGetUniformLocation(arrow, "view"), 1, GL_FALSE, glm::value_ptr(viewArrow));
         glUniformMatrix4fv(glGetUniformLocation(arrow, "model"), 1, GL_FALSE, glm::value_ptr(modelArrow));
         glBindVertexArray(VAOArrow);
-        glDrawArrays(GL_LINES, 0, 2);
-        glfwSwapBuffers(window2);
+        glDrawArrays(GL_LINES, 0, 6);
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
-           glfwWindowShouldClose(window) == 0 &&
-           glfwGetKey(window2, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
-           glfwWindowShouldClose(window2) == 0);
+           glfwWindowShouldClose(window) == 0);
 
     glfwTerminate();
 
