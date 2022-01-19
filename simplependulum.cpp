@@ -11,7 +11,7 @@ GLFWwindow* window;
 
 //deneme
 #define PI 3.141592  //Holy Pi!
-#define h 0.01       //step length for Runge-Kutta
+#define h 0.025       //step length for Runge-Kutta
 #define k 0.67       //driving force frequency (radian)
 #define THETA_0 1.57 //initial angle(radian)
 #define omega_0 0    //initial angular velocity
@@ -163,7 +163,7 @@ int main( void )
     do{
         driving_force = A * cos(k * time);
         current_angle = theta * 180 / PI;
-        //std::cout<<current_angle<<std::endl;
+        std::cout<<current_angle<<std::endl;
         glClear( GL_COLOR_BUFFER_BIT );
         glUseProgram(shaderProgram);
         
