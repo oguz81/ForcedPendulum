@@ -93,10 +93,8 @@ int main( void )
     
     
     Shader myshader("pendulum.vs" , "pendulum.fs");
-    Shader forcearrow("forcearrow.vs", "forcearrow.fs");
     
     unsigned int shaderProgram = myshader.programID();
-    unsigned int arrow = forcearrow.programID();
 
     float vertices[2160];
     float vertices2[] = { //vertices2 gives us the rod of the pendulum.
@@ -118,7 +116,7 @@ int main( void )
     drawCircle(vertices); //draws the pendulum ball.
     
 
-    unsigned int VBO, VBO2, VAO, VAO2, VBOArrow, VAOArrow;
+    unsigned int VBO, VAO, VAO2, VAOArrow;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glBindVertexArray(VAO);
@@ -140,9 +138,9 @@ int main( void )
     glEnableVertexAttribArray(0);
 
     glGenVertexArrays(1, &VAOArrow);
-    glGenBuffers(1, &VBOArrow);
+    glGenBuffers(1, &VBO);
     glBindVertexArray(VAOArrow);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOArrow);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(arrows), arrows, GL_STATIC_DRAW);
     
     //position attribute
@@ -195,22 +193,22 @@ int main( void )
         time =time+h;
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 1080);
-        glBindVertexArray(VAO2);
+        /*glBindVertexArray(VAO2);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 5);
     
         //Create the driving force arrow. It shows magnitude and direction side of the force.
-        glUseProgram(arrow);
+        
         glm::mat4 modelArrow= glm::mat4(1.0f);
         glm::mat4 projectionArrow = glm::mat4(1.0f);
         glm::mat4 viewArrow = glm::mat4(1.0f);
         viewArrow = glm::translate(viewArrow, glm::vec3(0.0f, -0.8f, 0.0f));
         viewArrow = glm::scale(viewArrow, glm::vec3(-driving_force * 0.5, 1.0f, 1.0f));
-        glUniformMatrix4fv(glGetUniformLocation(arrow, "projection"), 1, GL_FALSE, glm::value_ptr(projectionArrow));
-        glUniformMatrix4fv(glGetUniformLocation(arrow, "view"), 1, GL_FALSE, glm::value_ptr(viewArrow));
-        glUniformMatrix4fv(glGetUniformLocation(arrow, "model"), 1, GL_FALSE, glm::value_ptr(modelArrow));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projectionArrow));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(viewArrow));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(modelArrow));
         glBindVertexArray(VAOArrow);
         glDrawArrays(GL_LINES, 0, 6);
-        glfwSwapBuffers(window);
+        */glfwSwapBuffers(window);
         glfwPollEvents();
     }
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
