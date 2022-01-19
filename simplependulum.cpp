@@ -130,9 +130,9 @@ int main( void )
     glEnableVertexAttribArray(0);
 
     glGenVertexArrays(1, &VAO2);
-    glGenBuffers(1, &VBO2);
+    glGenBuffers(1, &VBO);
     glBindVertexArray(VAO2);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
     
     //position attribute
