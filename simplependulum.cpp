@@ -13,7 +13,7 @@ GLFWwindow* window;
 #define PI 3.141592  //Holy Pi!
 #define h 0.025       //step length for Runge-Kutta
 #define k 0.67       //driving force frequency (radian)
-#define THETA_0 1.57 //initial angle(radian)
+#define THETA_0 0 //initial angle(radian)
 #define omega_0 0    //initial angular velocity
 
 #define A 1.4        //driving force amplitude
@@ -193,7 +193,7 @@ int main( void )
         time =time+h;
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 1080);
-        /*glBindVertexArray(VAO2);
+        glBindVertexArray(VAO2);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 5);
     
         //Create the driving force arrow. It shows magnitude and direction side of the force.
@@ -201,14 +201,15 @@ int main( void )
         glm::mat4 modelArrow= glm::mat4(1.0f);
         glm::mat4 projectionArrow = glm::mat4(1.0f);
         glm::mat4 viewArrow = glm::mat4(1.0f);
-        viewArrow = glm::translate(viewArrow, glm::vec3(0.0f, -0.8f, 0.0f));
-        viewArrow = glm::scale(viewArrow, glm::vec3(-driving_force * 0.5, 1.0f, 1.0f));
+        //viewArrow = glm::translate(viewArrow, glm::vec3(0.0f, -0.8f, 0.0f));
+        //viewArrow = glm::scale(viewArrow, glm::vec3(-driving_force * 0.5, 1.0f, 1.0f));
+        view = glm::rotate(view, glm::radians(current_angle), glm::vec3(0.0f, 0.0f, 1.0f));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projectionArrow));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(viewArrow));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(modelArrow));
         glBindVertexArray(VAOArrow);
         glDrawArrays(GL_LINES, 0, 6);
-        */glfwSwapBuffers(window);
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
