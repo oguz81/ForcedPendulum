@@ -88,14 +88,10 @@ int main( void )
     }
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glClearColor(1.0f, 0.8f, 0.0f, 0.0f);
 
-    
-    
     Shader myshader("pendulum.vs" , "pendulum.fs");
-    
     unsigned int shaderProgram = myshader.programID();
-
     float vertices[2160];
     float vertices2[] = { //vertices2 gives us the rod of the pendulum.
         -0.01f, 0.0f,
@@ -191,19 +187,22 @@ int main( void )
         if(theta<-2*PI) theta= theta+(2*PI);
         
         time =time+h;
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 1080);
         glBindVertexArray(VAO2);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 5);
-    
+      //  glUseProgram(arrowShader);
+
         //Create the driving force arrow. It shows magnitude and direction side of the force.
         
         glm::mat4 modelArrow= glm::mat4(1.0f);
         glm::mat4 projectionArrow = glm::mat4(1.0f);
         glm::mat4 viewArrow = glm::mat4(1.0f);
-        //viewArrow = glm::translate(viewArrow, glm::vec3(0.0f, -0.8f, 0.0f));
-        //viewArrow = glm::scale(viewArrow, glm::vec3(-driving_force * 0.5, 1.0f, 1.0f));
-        view = glm::rotate(view, glm::radians(current_angle), glm::vec3(0.0f, 0.0f, 1.0f));
+        viewArrow = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
+        //viewArrow = glm::rotate(viewArrow, glm::radians(current_angle), glm::vec3(0.0f, 0.0f, 1.0f));
+        viewArrow = glm::scale(viewArrow, glm::vec3(-driving_force * 0.5, 1.0f, 1.0f));
+        
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projectionArrow));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(viewArrow));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(modelArrow));
