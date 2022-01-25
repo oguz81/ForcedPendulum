@@ -1,3 +1,9 @@
+/*     SIMPLE PENDULUM
+Forced damped pendulum simulation.
+Made by ouz81. 25/02/2022
+github.com/oguz81
+*/
+
 #include <stdio.h>
 #include <iostream>
 #include "shader.h"
@@ -9,27 +15,25 @@
 #include <glm/gtc/type_ptr.hpp>
 GLFWwindow* window;
 
-//deneme
-#define PI 3.141592  //Holy Pi!
+#define PI 3.141592   //Holy Pi!
 #define h 0.025       //step length for Runge-Kutta
-#define k 0.67       //driving force frequency (radian)
-#define THETA_0 0 //initial angle(radian)
-#define omega_0 0    //initial angular velocity
+#define k 0.67        //driving force frequency (radian)
+#define THETA_0 0     //initial angle(radian)
+#define omega_0 0     //initial angular velocity
 
-#define A 1.4        //driving force amplitude
-#define b 0.4        //damping constant
-#define m 1          //mass of pendulum
-#define R 1          //length of rod
-#define grav 1       //gravitational constant
+#define A 1.4         //driving force amplitude
+#define b 0.4         //damping constant
+#define m 1           //mass of pendulum
+#define R 1           //length of rod
+#define grav 1        //gravitational constant
 
-
+//functions of the differential equation
 float f(float time, float tht,float omega){
         return omega;
 }
 float g(float time, float tht, float omega){
         return -(grav/R)*sin(tht)-((b/(m*R*R))*omega)+((A/(m*R*R))*cos(k*time));
 }
-
 
 void drawCircle(float array[]){
     int corner_one, corner_two, corner_three;//corners of triangles. GL_TRIANGLES starts to draw counterclockwise.
@@ -111,7 +115,6 @@ int main( void )
 
     drawCircle(vertices); //draws the pendulum ball.
     
-
     unsigned int VBO, VAO, VAO2, VAOArrow;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -119,7 +122,7 @@ int main( void )
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     
-    //position attribute
+    //position attribute for 'vertices'(ball of the pendulum)
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
@@ -129,7 +132,7 @@ int main( void )
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
     
-    //position attribute
+    //position attribute for 'vertices2'(rod of the pendulum)
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
@@ -139,7 +142,7 @@ int main( void )
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(arrows), arrows, GL_STATIC_DRAW);
     
-    //position attribute
+    //position attribute for 'arrows'(force arrow)
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);   
 
@@ -156,8 +159,8 @@ int main( void )
     float current_angle;
     do{
         driving_force = A * cos(k * time);
-        current_angle = theta * 180 / PI;
-        std::cout<<current_angle<<std::endl;
+        current_angle = theta * 180 / PI; //converts theta(radian) to degree
+
         glClear( GL_COLOR_BUFFER_BIT );
         glUseProgram(shaderProgram);
         
@@ -192,15 +195,12 @@ int main( void )
         glDrawArrays(GL_TRIANGLES, 0, 1080);
         glBindVertexArray(VAO2);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 5);
-      //  glUseProgram(arrowShader);
 
         //Create the driving force arrow. It shows magnitude and direction side of the force.
-        
         glm::mat4 modelArrow= glm::mat4(1.0f);
         glm::mat4 projectionArrow = glm::mat4(1.0f);
         glm::mat4 viewArrow = glm::mat4(1.0f);
         viewArrow = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
-        //viewArrow = glm::rotate(viewArrow, glm::radians(current_angle), glm::vec3(0.0f, 0.0f, 1.0f));
         viewArrow = glm::scale(viewArrow, glm::vec3(-driving_force * 0.5, 1.0f, 1.0f));
         
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projectionArrow));
