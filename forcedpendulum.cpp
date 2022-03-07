@@ -1,4 +1,4 @@
-/*     SIMPLE PENDULUM
+/*     FORCED PENDULUM
 Forced damped pendulum simulation.
 Made by ouz81. 25/02/2022
 github.com/oguz81
