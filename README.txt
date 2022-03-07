@@ -1,4 +1,4 @@
-SIMPLE PENDULUM
+FORCED PENDULUM
 
 This is the 2D simulation if forced damped pendulum with C++ using OpenGL.
 OpenGL version 3.30
