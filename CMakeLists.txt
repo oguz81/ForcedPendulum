@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project (simplependulum)
+project (forcedpendulum)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "{CMAKE_SOURCE_DIR}/cmake/")
 find_package(OpenGL REQUIRED)
@@ -20,7 +20,7 @@ set(ALL_LIBS
 	
 	
 )
-add_executable(simplependulum simplependulum.cpp shader.h shader.cpp) 
+add_executable(forcedpendulum forcedpendulum.cpp shader.h shader.cpp) 
 target_link_libraries(${PROJECT_NAME}
 	${ALL_LIBS}	
 	
