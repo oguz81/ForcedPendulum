@@ -1,6 +1,6 @@
 FORCED PENDULUM
 
-This is the 2D simulation if forced damped pendulum with C++ using OpenGL.
+This is the 2D simulation of forced damped pendulum with C++ using OpenGL.
 OpenGL version 3.30
 
 We used Runge-Kutta method to solve the differential equation of the pendulum's motion.
